@@ -5,7 +5,7 @@ class Pelicula {
     required this.poster,
     required this.sinopsis,
     required this.rating,
-    required this.release_date
+    required this.release_date,
   });
 
   final int id;
@@ -13,16 +13,16 @@ class Pelicula {
   final String poster;
   final String sinopsis;
   final double rating;
-  final int release_date,
+  final int release_date;
 
-  factory Pelicula.fromJson(Map<String, dynamic> jsonPelicula) {
+  factory Pelicula.fromJson(Map<String, dynamic> json) {
     return Pelicula(
       id: json['id'] ?? 0,
       title: json['title'],
       poster: json['poster_path'] ?? '',
       sinopsis: json['overview'],
       rating: (json['vote_average'] as num).toDouble(),
-      rating: json['release_date'],
+      release_date: json['release_date'] ?? 0,
     );
   }
 }
