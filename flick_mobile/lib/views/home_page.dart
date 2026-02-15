@@ -83,27 +83,6 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ],
                       ),
-                      // Carousel de estrenos
-                      CarouselSlider(
-                        items: _peliculas.map((e) {
-                          return Container(
-                            width: 200,
-                            height: 400,
-                            margin: EdgeInsets.symmetric(horizontal: 10),
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: NetworkImage(
-                                  "${_imageBaseUrl}${e.poster}",
-                                ),
-                                fit: BoxFit.cover,
-                              ),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          );
-                        }).toList(),
-
-                        options: CarouselOptions(height: 300),
-                      ),
                     ],
                   ),
                 ],
@@ -212,7 +191,34 @@ class _HomePageState extends State<HomePage> {
                     },
                   ),
                 ),
+          Column(
+            children: [
+              Text(
+                'Most popular this week',
+                style: TextStyle(color: clr.primary),
+              ),
+            ],
+          ),
         ],
+      ),
+      bottomNavigationBar: BottomAppBar(
+        color: clr.primary,
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(onPressed: () {}, icon: Icon(Icons.home, size: 30)),
+              IconButton(onPressed: () {}, icon: Icon(Icons.search, size: 30)),
+              IconButton(
+                onPressed: () {},
+                icon: Icon(Icons.library_books, size: 30),
+              ),
+              IconButton(onPressed: () {}, icon: Icon(Icons.person, size: 30)),
+            ],
+          ),
+        ),
       ),
     );
   }
