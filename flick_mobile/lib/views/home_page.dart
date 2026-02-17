@@ -1,7 +1,8 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flick_app/widgets/most_popular_slider.dart';
 import 'package:flick_app/services/movie_service.dart';
 import 'package:flick_app/models/pelicula.dart';
+import 'package:flick_app/widgets/nav_bar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,30 +13,22 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final MovieService _servicio = MovieService();
-  final TextEditingController _controlador = TextEditingController();
-
+  // Mantenemos tus listas y baseUrl originales
+  List<Pelicula> _populares = [];
   final String _imageBaseUrl = 'https://image.tmdb.org/t/p/w500';
 
-  List<Pelicula> _peliculas = [];
-  bool _cargando = false;
+  @override
+  void initState() {
+    super.initState();
+    _cargarPopulares();
+  }
 
-  void _buscar() async {
-    if (_controlador.text.isEmpty) return;
-    FocusScope.of(context).unfocus(); // Esconde el teclado
-
-    setState(() => _cargando = true);
+  void _cargarPopulares() async {
     try {
-      final resultados = await _servicio.buscarPeliculas(_controlador.text);
-      setState(() {
-        _peliculas = resultados;
-        _cargando = false;
-      });
+      final populares = await _servicio.obtenerPopulares();
+      setState(() => _populares = populares);
     } catch (e) {
-      setState(() => _cargando = false);
-      // Muestra un mensajito (SnackBar) si hay error
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error: $e"), backgroundColor: Colors.red),
-      );
+      print("Error al cargar populares: $e");
     }
   }
 
@@ -47,14 +40,17 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 40), // Espacio superior
+          const SizedBox(height: 40),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: SafeArea(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment
+                    .start, // <-- CORRECCIÓN: Alinea hijos al inicio
                 children: [
-                  // Encabezado con avatar y texto bienvenida
+                  // --- Tu Encabezado Original ---
                   Row(
                     children: [
                       SizedBox(
@@ -65,7 +61,7 @@ class _HomePageState extends State<HomePage> {
                           backgroundImage: AssetImage('assets/img/profile.png'),
                         ),
                       ),
-                      SizedBox(width: 16),
+                      const SizedBox(width: 16),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -85,141 +81,30 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ],
                   ),
+                  const SizedBox(height: 30),
+                  // --- Texto Popular (Ahora alineado con el avatar) ---
+                  Text(
+                    'Most popular this week',
+                    style: tx.bodyMedium?.copyWith(
+                      color: clr.primary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ],
               ),
             ),
           ),
-          _cargando
+          // --- Tu Slider ---
+          const SizedBox(height: 10),
+          _populares.isEmpty
               ? const Expanded(
                   child: Center(child: CircularProgressIndicator()),
                 )
-              : Expanded(
-                  child: ListView.builder(
-                    itemCount: _peliculas.length,
-                    itemBuilder: (context, index) {
-                      final peli = _peliculas[index];
-                      return Card(
-                        // <-- NUEVO: Envolvemos en una Card para que se vea mejor
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Column(
-                            // <-- Usamos Column principal
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Título grande
-                              Text(
-                                peli.title,
-                                style: Theme.of(context).textTheme.titleLarge,
-                              ),
-                              const SizedBox(height: 8),
-                              // Rating y estrellas
-                              Row(
-                                children: [
-                                  const Icon(
-                                    Icons.star,
-                                    color: Colors.amber,
-                                    size: 20,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    "${peli.rating.toStringAsFixed(1)} / 10",
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.titleMedium,
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 16,
-                              ), // Espacio antes de la imagen
-                              // <-- NUEVO: La Imagen
-                              ClipRRect(
-                                // ClipRRect redondea las esquinas de la imagen
-                                borderRadius: BorderRadius.circular(12),
-                                child: Image.network(
-                                  // Construimos la URL completa: Base + Path de la peli
-                                  '$_imageBaseUrl${peli.poster}',
-                                  width: double
-                                      .infinity, // Que ocupe todo el ancho
-                                  height: 200, // Altura fija
-                                  fit: BoxFit
-                                      .cover, // La imagen rellena el hueco sin deformarse
-                                  // Si no hay imagen o falla la carga, mostramos un icono
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Container(
-                                      height: 200,
-                                      color: Colors.grey[800],
-                                      child: const Center(
-                                        child: Icon(
-                                          Icons.broken_image,
-                                          size: 50,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  // Mientras carga, mostramos un pequeño spinner
-                                  loadingBuilder:
-                                      (context, child, loadingProgress) {
-                                        if (loadingProgress == null)
-                                          return child;
-                                        return Container(
-                                          height: 200,
-                                          child: const Center(
-                                            child: CircularProgressIndicator(),
-                                          ),
-                                        );
-                                      },
-                                ),
-                              ),
-                              const SizedBox(height: 12),
-                              // Sinopsis (opcional, para que veas que cabe más texto debajo)
-                              Text(
-                                peli.sinopsis,
-                                maxLines: 3, // Máximo 3 líneas
-                                overflow: TextOverflow
-                                    .ellipsis, // Pone "..." si es muy larga
-                                style: TextStyle(color: Colors.grey[400]),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-          Column(
-            children: [
-              Text(
-                'Most popular this week',
-                style: TextStyle(color: clr.primary),
-              ),
-            ],
-          ),
+              : MostPopularSlider(peliculas: _populares),
         ],
       ),
-      bottomNavigationBar: BottomAppBar(
-        color: clr.primary,
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(onPressed: () {}, icon: Icon(Icons.home, size: 30)),
-              IconButton(onPressed: () {}, icon: Icon(Icons.search, size: 30)),
-              IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.library_books, size: 30),
-              ),
-              IconButton(onPressed: () {}, icon: Icon(Icons.person, size: 30)),
-            ],
-          ),
-        ),
-      ),
+      // --- Tu Bottom Nav Original ---
+      bottomNavigationBar: const NavBar(),
     );
   }
 }

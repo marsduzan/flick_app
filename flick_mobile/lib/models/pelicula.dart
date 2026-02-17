@@ -1,28 +1,27 @@
 class Pelicula {
+  final int id;
+  final String title;
+  final String poster;
+  final double rating;
+  final String sinopsis;
+
   Pelicula({
     required this.id,
     required this.title,
     required this.poster,
-    required this.sinopsis,
     required this.rating,
-    required this.release_date,
+    required this.sinopsis,
   });
-
-  final int id;
-  final String title;
-  final String poster;
-  final String sinopsis;
-  final double rating;
-  final int release_date;
 
   factory Pelicula.fromJson(Map<String, dynamic> json) {
     return Pelicula(
       id: json['id'] ?? 0,
-      title: json['title'],
-      poster: json['poster_path'] ?? '',
-      sinopsis: json['overview'],
-      rating: (json['vote_average'] as num).toDouble(),
-      release_date: json['release_date'] ?? 0,
+      title: json['title'] ?? json['name'] ?? 'No title',
+      // Ajustamos según lo que devuelva tu backend (usualmente poster_path)
+      poster: json['poster_path'] ?? json['poster'] ?? '',
+      rating: (json['vote_average'] as num?)?.toDouble() ?? 0.0,
+      sinopsis:
+          json['overview'] ?? json['sinopsis'] ?? 'No description available',
     );
   }
 }
