@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 40),
+          const SizedBox(height: 30),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: SafeArea(
@@ -81,21 +81,34 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 20),
                   // --- Texto Popular (Ahora alineado con el avatar) ---
-                  Text(
-                    'Most popular',
-                    style: tx.headlineSmall?.copyWith(
-                      color: clr.primary,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Most popular',
+                        style: tx.headlineSmall?.copyWith(
+                          color: clr.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(
+                          Icons.arrow_forward_ios,
+                          size: 16,
+                          color: clr.primary,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
           ),
           // --- Tu Slider ---
-          const SizedBox(height: 15),
+          const SizedBox(height: 10),
           _populares.isEmpty
               ? const Expanded(
                   child: Center(child: CircularProgressIndicator()),

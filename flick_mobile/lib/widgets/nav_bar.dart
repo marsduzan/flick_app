@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flick_app/main.dart';
+import 'package:flick_app/views/pelicula_detalle.dart';
 
 class NavBar extends StatelessWidget {
   const NavBar({super.key});
@@ -10,6 +11,7 @@ class NavBar extends StatelessWidget {
     final clr = Theme.of(context).colorScheme;
 
     return BottomAppBar(
+      height: 70,
       color: clr.primary,
       child: Padding(
         padding: const EdgeInsets.all(10.0),

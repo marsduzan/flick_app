@@ -1,10 +1,12 @@
 import 'package:flick_app/views/home_page.dart';
+import 'package:flick_app/views/pelicula_detalle.dart';
 import 'package:flutter/material.dart';
 import 'services/movie_service.dart';
 import 'models/pelicula.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flick_app/views/home_page.dart';
 import 'package:flick_app/views/search_page.dart';
+import 'package:flick_app/views/pelicula_detalle.dart';
 
 void main() => runApp(const MyApp());
 
