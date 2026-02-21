@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:flick_app/models/pelicula.dart';
 
 class MovieService {
-  final String _baseUrl = 'http://localhost:3000';
+  final String _baseUrl = 'http://10.0.2.2:3000';
 
   Future<List<Pelicula>> buscarPeliculas(String nombre) async {
     final url = Uri.parse('$_baseUrl/buscar?nombre=$nombre');

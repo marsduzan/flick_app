@@ -34,3 +34,18 @@ app.get('/buscar', async (req, res) => {
 app.listen(port, () => {
   console.log(`Flick en marcha en http://localhost:${port}`);
 });
+
+app.get('/populares', async (req, res) => {
+  try {
+    const respuesta = await axios.get('https://api.themoviedb.org/3/trending/movie/week', {
+      headers: {
+        Authorization: `Bearer ${process.env.TMDB_TOKEN}`
+      }
+    });
+
+    res.json(respuesta.data.results);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ mensaje: 'Error al conectar con la API de cine' });
+  }
+});

@@ -35,11 +35,15 @@ class MyApp extends StatelessWidget {
             fontFamily: GoogleFonts.montserrat(
               fontWeight: FontWeight.bold,
             ).fontFamily,
-            fontSize: 20,
+            fontSize: 16,
           ),
           bodyMedium: TextStyle(
             fontFamily: GoogleFonts.montserrat().fontFamily,
-            fontSize: 14,
+            fontSize: 18,
+          ),
+          bodySmall: TextStyle(
+            fontFamily: GoogleFonts.montserrat().fontFamily,
+            fontSize: 12,
           ),
         ),
       ),

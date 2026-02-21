@@ -67,7 +67,7 @@ class _HomePageState extends State<HomePage> {
                         children: [
                           Text(
                             "Welcome Back!",
-                            style: tx.bodyMedium?.copyWith(
+                            style: tx.bodySmall?.copyWith(
                               color: clr.primary.withOpacity(0.7),
                             ),
                           ),
@@ -84,8 +84,8 @@ class _HomePageState extends State<HomePage> {
                   const SizedBox(height: 30),
                   // --- Texto Popular (Ahora alineado con el avatar) ---
                   Text(
-                    'Most popular this week',
-                    style: tx.bodyMedium?.copyWith(
+                    'Most popular',
+                    style: tx.headlineSmall?.copyWith(
                       color: clr.primary,
                       fontWeight: FontWeight.bold,
                     ),
@@ -95,7 +95,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           // --- Tu Slider ---
-          const SizedBox(height: 10),
+          const SizedBox(height: 15),
           _populares.isEmpty
               ? const Expanded(
                   child: Center(child: CircularProgressIndicator()),
