@@ -10,11 +10,16 @@ app.get('/', (req, res) => {
   res.send('¡Servidor de Flick funcionando! 🍿');
 });
 
-// Ruta para buscar películas por nombre, recibe el nombre como query parameter
+// Iniciamos el servidor en el puerto especificado
+app.listen(port, () => {
+  console.log(`Flick en marcha en http://localhost:${port}`);
+});
+
+// Endpoint para buscar películas por nombre
 app.get('/buscar', async (req, res) => {
   const pelic = req.query.nombre;
 
-  // Validamos que se haya proporcionado un nombre de película
+
   try {
     const respuesta = await axios.get(`https://api.themoviedb.org/3/search/movie?query=${pelic}`, {
       headers: {
@@ -22,7 +27,6 @@ app.get('/buscar', async (req, res) => {
       }
     });
 
-    // Enviamos solo los resultados de la búsqueda al cliente
     res.json(respuesta.data.results);
   } catch (error) {
     console.log(error);
@@ -30,11 +34,8 @@ app.get('/buscar', async (req, res) => {
   }
 });
 
-// Iniciamos el servidor en el puerto especificado
-app.listen(port, () => {
-  console.log(`Flick en marcha en http://localhost:${port}`);
-});
 
+// Endpoint para obtener las películas más populares de la semana
 app.get('/populares', async (req, res) => {
   try {
     const respuesta = await axios.get('https://api.themoviedb.org/3/trending/movie/week', {
@@ -47,5 +48,23 @@ app.get('/populares', async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ mensaje: 'Error al conectar con la API de cine' });
+  }
+});
+
+// Endpoint para obtener los proximos estrenos
+app.get('/estrenos', async (req, res) => {
+
+  try {
+    const respuesta = await axios.get('https://api.themoviedb.org/3/movie/upcoming', {
+      headers: {
+        Authorization: `Bearer ${process.env.TMDB_TOKEN}`
+      }
+    });
+
+    res.json(respuesta.data.results);
+    
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({mensaje: 'Error al conectar con la API de cine' });
   }
 });

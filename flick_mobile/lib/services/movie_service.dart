@@ -10,8 +10,15 @@ class MovieService {
     return _fetchList(url);
   }
 
+  // Nuevo método para obtener películas populares
   Future<List<Pelicula>> obtenerPopulares() async {
     final url = Uri.parse('$_baseUrl/populares');
+    return _fetchList(url);
+  }
+
+  // Nuevo método para obtener películas populares
+  Future<List<Pelicula>> obtenerUpcoming() async {
+    final url = Uri.parse('$_baseUrl/estrenos');
     return _fetchList(url);
   }
 
